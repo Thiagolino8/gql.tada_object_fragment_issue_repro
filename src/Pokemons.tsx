@@ -1,6 +1,6 @@
 import { graphql } from 'gql.tada'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
-import { Pokemon, fragment } from './Pokemon'
+import { Pokemon, fragments } from './Pokemon'
 import { useContext } from 'react'
 import { GQLClientContext } from './Layout'
 import { ResultOf } from 'gql.tada'
@@ -14,7 +14,7 @@ export const PokemonsQuery = graphql(
 			}
 		}
 	`,
-	[fragment]
+	[fragments.pokemon]
 )
 
 const select = (res: InfiniteData<ResultOf<typeof PokemonsQuery> | undefined>) =>

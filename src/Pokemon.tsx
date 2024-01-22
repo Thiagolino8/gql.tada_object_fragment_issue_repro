@@ -1,15 +1,17 @@
 import { graphql, ResultOf } from 'gql.tada'
 import { PokemonsQuery } from './Pokemons'
 
-export const fragment = graphql(`
-	fragment Pokemon on pokemon_v2_pokemonspecies @_unmask {
-		has_gender_differences
-		evolves_from_species_id
-		generation_id
-		name
-		evolution_chain_id
-	}
-`)
+export const fragments = {
+	pokemon: graphql(`
+		fragment Pokemon on pokemon_v2_pokemonspecies @_unmask {
+			has_gender_differences
+			evolves_from_species_id
+			generation_id
+			name
+			evolution_chain_id
+		}
+	`),
+}
 
 interface Props {
 	pokemon: ResultOf<typeof PokemonsQuery>['pokemons'][number]
