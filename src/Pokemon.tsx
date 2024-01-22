@@ -1,26 +1,21 @@
-import { graphql, readFragment, ResultOf } from 'gql.tada'
+import { graphql, ResultOf } from 'gql.tada'
 import { PokemonsQuery } from './Pokemons'
 
-export const fragments = {
-	PokemonFragment: graphql(`
-		fragment Pokemon on pokemon_v2_pokemonspecies {
-			has_gender_differences
-			evolves_from_species_id
-			generation_id
-			name
-			evolution_chain_id
-		}
-	`),
-}
+export const fragment = graphql(`
+	fragment Pokemon on pokemon_v2_pokemonspecies @_unmask {
+		has_gender_differences
+		evolves_from_species_id
+		generation_id
+		name
+		evolution_chain_id
+	}
+`)
 
 interface Props {
-	pokemonItem: ResultOf<typeof PokemonsQuery>['pokemons'][number]
+	pokemon: ResultOf<typeof PokemonsQuery>['pokemons'][number]
 }
 
-export const Pokemon = ({ pokemonItem }: Props) => {
-	const fragmentItem = readFragment(fragments.PokemonFragment, pokemonItem)
-	const pokemon = { ...pokemonItem, ...fragmentItem }
-
+export const Pokemon = ({ pokemon }: Props) => {
 	return (
 		<div>
 			<p>ID: {pokemon.id}</p>
