@@ -18,12 +18,15 @@ export const PokemonsQuery = graphql(
 )
 
 const select = (res: InfiniteData<ResultOf<typeof PokemonsQuery> | undefined>) =>
-	res?.pages.reduce((acc, page) => [...acc, ...(page?.pokemons ?? [])], [] as ResultOf<typeof PokemonsQuery>['pokemons'])
+	res?.pages.reduce(
+		(acc, page) => [...acc, ...(page?.pokemons ?? [])],
+		[] as ResultOf<typeof PokemonsQuery>['pokemons']
+	)
 
 export const Pokemons = () => {
 	const GQLClient = useContext(GQLClientContext)
-	const { data, isFetching, error } = useInfiniteQuery({
-		getNextPageParam: (_, allPages) => allPages.reduce((acc, page) => page?.pokemons.length ?? 0 + acc, 0),
+	const { data, isFetching, error, fetchNextPage } = useInfiniteQuery({
+		getNextPageParam: (_, allPages) => allPages.reduce((acc, page) => (page?.pokemons.length ?? 0) + acc, 0),
 		select,
 		initialPageParam: 0,
 		enabled: !!GQLClient,
@@ -33,13 +36,16 @@ export const Pokemons = () => {
 
 	if (data)
 		return (
-			<ul>
-				{data.map((pokemon) => (
-					<li key={pokemon.id}>
-						<Pokemon pokemon={pokemon} />
-					</li>
-				))}
-			</ul>
+			<>
+				<ul>
+					{data.map((pokemon) => (
+						<li key={pokemon.id}>
+							<Pokemon pokemon={pokemon} />
+						</li>
+					))}
+				</ul>
+				<button onClick={() => fetchNextPage()}>Load more</button>
+			</>
 		)
 	if (error) return <p>Oh no... {error?.message}</p>
 	if (isFetching) return <p>Loading...</p>
